@@ -203,3 +203,4 @@ function proceedToOrder() {
         document.getElementById("productPreviewBanner").style.display = "none";
     }, 400); // זמן טעינה – אפשר לשנות
 }
+
