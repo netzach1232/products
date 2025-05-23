@@ -1,0 +1,84 @@
+.top-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    max-width: 400px;
+    margin: 30px auto;
+    padding: 10px;
+}
+
+/* חיפוש עם אייקון בפנים */
+.search-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.search-input-with-icon {
+    width: 100%;
+    padding: 10px 40px 10px 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.search-icon-button {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+/* כפתורים מחוברים מתחת לחיפוש */
+.double-button-row {
+    display: flex;
+    width: 100%;
+}
+
+.main-button {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    transition: background 0.2s ease;
+}
+
+.main-button:first-child {
+    border-radius: 0 0 0 8px;
+    background-color: #25D366;
+}
+
+.main-button:last-child {
+    border-radius: 0 0 8px 0;
+    background-color: #007BFF;
+}
+
+.main-button:hover {
+    filter: brightness(1.1);
+}
+
+/* רספונסיביות לנייד */
+@media (max-width: 600px) {
+    .top-controls {
+        width: 90%;
+    }
+
+    .double-button-row {
+        flex-direction: column;
+    }
+
+    .main-button:first-child,
+    .main-button:last-child {
+        border-radius: 8px;
+        margin-top: 5px;
+    }
+}
