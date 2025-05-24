@@ -24,42 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-// מופעל גם מהאייקון
-function triggerSearch() {
-    const searchInput = document.getElementById("searchInput");
-    const query = searchInput.value.trim().toLowerCase();
-    const allProducts = Array.from(document.querySelectorAll("#allProducts .product"));
-    const noResultsMessage = document.getElementById("noResultsMessage");
-
-    let found = false;
-
-    allProducts.forEach(product => {
-        const name = product.querySelector(".product-name").textContent.toLowerCase();
-        const description = product.getAttribute("data-description").toLowerCase();
-
-        if (name.includes(query) || description.includes(query)) {
-            product.style.display = "block";
-            if (!found) {
-                found = true;
-                // גלילה למוצר הראשון שנמצא
-                product.scrollIntoView({ behavior: "smooth", block: "center" });
-
-                // ניקוי שדה החיפוש
-                searchInput.value = "";
-                localStorage.removeItem("savedSearch");
-            }
-        } else {
-            product.style.display = "none";
-        }
-    });
-
-    // תוצאה או הודעה
-    if (!found) {
-        noResultsMessage.style.display = "block";
-    } else {
-        noResultsMessage.style.display = "none";
-    }
-}
 
 function toggleAbout() {
     const banner = document.getElementById("aboutBanner");
@@ -356,3 +320,25 @@ function changeQuantity(index, delta) {
     renderCartItems();      // מציג את כל המוצרים מחדש
     updateCartSummary();    // מעדכן את הסרגל
 }
+
+let initialWindowHeight;
+
+document.addEventListener("DOMContentLoaded", () => {
+    initialWindowHeight = window.innerHeight;
+});
+
+window.addEventListener('resize', () => {
+    const currentHeight = window.innerHeight;
+    const isKeyboardOpen = currentHeight < initialWindowHeight - 100;
+
+    const whatsappBubble = document.getElementById('whatsappBubbleWrapper');
+    const backToTop = document.getElementById('backToTop');
+
+    if (isKeyboardOpen) {
+        if (whatsappBubble) whatsappBubble.style.display = 'none';
+        if (backToTop) backToTop.style.display = 'none';
+    } else {
+        if (whatsappBubble) whatsappBubble.style.display = 'flex'; // או block לפי העיצוב שלך
+        if (backToTop && window.scrollY > 200) backToTop.style.display = 'block'; // רק אם עברו 200px גלילה
+    }
+});
