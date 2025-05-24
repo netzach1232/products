@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>סל הקניות</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <header class="top-bar" style="background-color: rgba(7, 172, 117, 0.397); padding: 20px;">
+        <h1 class="site-title" style="font-size: 24px; color: white;">🛒 סל הקניות שלך</h1>
+
+        <a href="index.html" style="
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: #ffffff;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    z-index: 10000;
+">
+            <img src="images/back-to-home.png" alt="דף הבית" style="width: 24px; height: 24px;">
+        </a>
+
+
+    </header>
+
+    <main style="padding: 40px; text-align: center;"></main>
+
+
+
+    <main id="cartItems" style="padding: 30px;"></main>
+
+
+    <div id="cartSummary" style="
+    display: none;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: #8d98ace3;
+    color: rgb(255, 255, 255);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    z-index: 9999;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
+    font-size: 16px;
+    font-weight: bolder;
+    gap: 0;
+    text-align: right;
+    border-radius: 10%;
+">
+
+        <div style="padding: 0 20px; display: flex; align-items: center;">
+            <p id="totalQuantity" style="margin: 0;"></p>
+        </div>
+
+        <div style="width: 1px; background-color: rgb(0, 0, 0);"></div>
+
+        <div style="padding: 0 20px; display: flex; align-items: center;">
+            <p id="totalAmount" style="margin: 0;"></p>
+        </div>
+
+        <div style="width: 1px; background-color: rgb(0, 0, 0);"></div>
+
+        <div style="padding: 0 20px; display: flex; align-items: center;">
+            <button onclick="proceedToCheckout()" style="
+            padding: 8px 16px;
+            background: white;
+            color: #000000;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;">
+                המשך לקופה 💳
+            </button>
+        </div>
+    </div>
+
+
+
+
+    <script src="script2.js"></script>
+    <script src="script.js"></script>
+
+
+</body>
+
+</html>
