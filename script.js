@@ -139,7 +139,7 @@ function addToCart() {
     const imageSrc = document.getElementById("previewImage").getAttribute("src");
 
     // ✅ שומר נתיב כמו: products/images/pen-set.jpg ללא /
-    const fixedImage = imageSrc.replace(/^\/?products\//, 'products/');
+    const fixedImage = imageSrc.replace(/^\/?products\//, 'images/');
 
     const product = {
         name,
