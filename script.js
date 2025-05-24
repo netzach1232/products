@@ -137,14 +137,19 @@ function addToCart() {
     const description = document.getElementById("previewDescription").textContent;
     const price = document.getElementById("previewPrice").textContent.replace("₪", "").trim();
     const quantity = parseInt(document.getElementById("productQuantity").value);
-    const image = document.getElementById("previewImage").getAttribute("src");
+    const imageSrc = document.getElementById("previewImage").getAttribute("src");
+
+    // ✅ תמיד יוצר נתיב מלא ותקף לגיטהאב
+    const fixedImage = imageSrc.startsWith("http")
+        ? imageSrc
+        : location.origin + "/" + imageSrc.replace(/^\/+/, "");
 
     const product = {
         name,
         description,
         price: parseFloat(price),
         quantity,
-        image
+        image: fixedImage
     };
 
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -157,13 +162,8 @@ function addToCart() {
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
-
-    // ✅ מאפס את סגירת הסרגל – כך שתמיד יופיע שוב אחרי שמירה
     localStorage.setItem("cartBarClosed", "false");
-
-    updateCartCount(); // מציג את הסרגל ומעדכן כמות
-
-    // סגירת תצוגת המוצר
+    updateCartCount();
     document.getElementById("productPreviewBanner").style.display = "none";
 }
 
