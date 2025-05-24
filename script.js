@@ -138,13 +138,16 @@ function addToCart() {
     const price = document.getElementById("previewPrice").textContent.replace("₪", "").trim();
     const quantity = parseInt(document.getElementById("productQuantity").value);
     const image = document.getElementById("previewImage").getAttribute("src");
+    
+    // תיקון נתיב לתמונה – תמיד מתחיל ב-/
+    const fixedImage = image.startsWith("/") ? image : "/" + image;
 
     const product = {
         name,
         description,
         price: parseFloat(price),
         quantity,
-        image
+        image: fixedImage
     };
 
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -158,14 +161,14 @@ function addToCart() {
 
     localStorage.setItem("cart", JSON.stringify(cart));
 
-    // ✅ מאפס את סגירת הסרגל – כך שתמיד יופיע שוב אחרי שמירה
+    // מציג את הסרגל ומאפס את הסגירה
     localStorage.setItem("cartBarClosed", "false");
+    updateCartCount();
 
-    updateCartCount(); // מציג את הסרגל ומעדכן כמות
-
-    // סגירת תצוגת המוצר
+    // סגירת הבאנר של התצוגה
     document.getElementById("productPreviewBanner").style.display = "none";
 }
+
 
 
 document.addEventListener("DOMContentLoaded", () => {
