@@ -141,7 +141,7 @@ function addToCart() {
     // ✅ קישור ישיר לתיקיית /images בלבד
     const fixedImage = imageSrc.startsWith("http")
         ? imageSrc
-        : location.origin + "images/" + imageSrc.split("/").pop();
+        : location.origin + "/images/" + imageSrc.split("/").pop();
 
     const product = {
         name,
