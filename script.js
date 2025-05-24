@@ -131,7 +131,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // לחיצה על הכפתור כבר קיימת ב-HTML שלך: onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
 });
 
-
 function addToCart() {
     const name = document.getElementById("previewName").textContent;
     const description = document.getElementById("previewDescription").textContent;
@@ -139,10 +138,10 @@ function addToCart() {
     const quantity = parseInt(document.getElementById("productQuantity").value);
     const imageSrc = document.getElementById("previewImage").getAttribute("src");
 
-    // ✅ תיקון מלא לשמירה בגיטהאב (כולל תיקיית products)
+    // ✅ קישור ישיר לתיקיית /images בלבד
     const fixedImage = imageSrc.startsWith("http")
         ? imageSrc
-        : location.origin + "/products/" + imageSrc.replace(/^\/+/, "").replace(/^products\//, "");
+        : location.origin + "/images/" + imageSrc.split("/").pop();
 
     const product = {
         name,
