@@ -17,12 +17,13 @@ body {
 .logo-container {
     display: flex;
     align-items: center;
+    margin-left: -40px;
 }
 
 .logo {
     width: 100px;
     height: 100px;
-    margin-left: 15px;
+    margin-left: -5px;
 }
 
 .site-title {
@@ -242,4 +243,24 @@ body {
 .whatsapp-bubble img {
     width: 40px;
     height: 40px;
+}
+
+.custom-header-image {
+    position: relative;
+    top: 10px;
+    right: 0;
+    margin-left: auto;
+    margin-bottom: -60px;
+    margin-top: -50px;
+    /* כדי להצמיד לצד ימין */
+    /* כדי להצמיד לצד ימין */
+    display: flex;
+    align-items: center;
+}
+
+.custom-header-image img {
+    width: 200px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: none;
 }
