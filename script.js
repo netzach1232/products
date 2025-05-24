@@ -138,8 +138,8 @@ function addToCart() {
     const quantity = parseInt(document.getElementById("productQuantity").value);
     const imageSrc = document.getElementById("previewImage").getAttribute("src");
 
-    // ✅ שומר את הנתיב בדיוק כמו שהוא, בלי location.origin, בלי תיקון
-    const fixedImage = imageSrc;
+    // ✅ שומר נתיב כמו: products/images/pen-set.jpg ללא /
+    const fixedImage = imageSrc.replace(/^\/?products\//, 'products/');
 
     const product = {
         name,
