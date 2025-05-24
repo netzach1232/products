@@ -167,40 +167,192 @@ document.addEventListener("DOMContentLoaded", () => {
     // לחיצה על הכפתור כבר קיימת ב-HTML שלך: onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
 });
 
-function proceedToOrder() {
-    // לוקח את שם המוצר מהבאנר של התיאור
-    const productName = document.getElementById("previewName").textContent;
 
-    // מזין את שם המוצר לשדה הנסתר בטופס ההזמנה
-    document.getElementById("selectedProductInput").value = productName;
+function addToCart() {
+    const name = document.getElementById("previewName").textContent;
+    const description = document.getElementById("previewDescription").textContent;
+    const price = document.getElementById("previewPrice").textContent.replace("₪", "").trim();
+    const quantity = parseInt(document.getElementById("productQuantity").value);
+    const image = document.getElementById("previewImage").getAttribute("src");
 
-    // מציג את טופס ההזמנה
-    document.getElementById("orderFormModal").style.display = "flex";
+    const product = {
+        name,
+        description,
+        price: parseFloat(price),
+        quantity,
+        image
+    };
 
-    // מסתיר את באנר התיאור
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const existing = cart.find(item => item.name === product.name);
+    if (existing) {
+        existing.quantity += quantity;
+    } else {
+        cart.push(product);
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    // ✅ מאפס את סגירת הסרגל – כך שתמיד יופיע שוב אחרי שמירה
+    localStorage.setItem("cartBarClosed", "false");
+
+    updateCartCount(); // מציג את הסרגל ומעדכן כמות
+
+    // סגירת תצוגת המוצר
     document.getElementById("productPreviewBanner").style.display = "none";
 }
 
-function proceedToOrder() {
-    const productName = document.getElementById("previewName").textContent;
-    const quantity = document.getElementById("productQuantity").value;
 
-    // מציג את עיגול הטעינה
-    const spinner = document.getElementById("loadingSpinner");
-    spinner.style.display = "block";
+document.addEventListener("DOMContentLoaded", () => {
+    renderCartItems(); // זה ירנדר את הכל נכון, כולל הכפתורים
+});
 
-    // מחכה 1.5 שניות ואז עובר לטופס
-    setTimeout(() => {
-        spinner.style.display = "none";
 
-        // ממלא את הטופס עם פרטי המוצר והכמות
-        document.getElementById("selectedProductInput").value = productName + " (כמות: " + quantity + ")";
+function updateQuantity(index, newQuantity) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart[index].quantity = parseInt(newQuantity);
+    localStorage.setItem("cart", JSON.stringify(cart));
 
-        // מציג את טופס ההזמנה
-        document.getElementById("orderFormModal").style.display = "flex";
-
-        // מסתיר את באנר התצוגה
-        document.getElementById("productPreviewBanner").style.display = "none";
-    }, 400); // זמן טעינה – אפשר לשנות
+    // עדכון מיידי של תצוגת הסל והסרגל
+    renderCartItems(); // מציג מחדש את כל המוצרים עם הכמות החדשה
+    updateCartSummary(); // מעדכן את הסרגל למטה
 }
 
+
+function removeItem(index) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCartItems();     // מציג את המוצרים מחדש
+    updateCartSummary();   // מעדכן את הסרגל
+}
+
+
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+    // מספר בעיגול בסל למעלה
+    const badge = document.getElementById("cartCount");
+    if (badge) {
+        badge.textContent = total;
+        badge.style.display = total > 0 ? "inline-block" : "none";
+    }
+
+    // סרגל למטה
+    const bar = document.getElementById("floatingCartBar");
+    const text = document.getElementById("floatingCartText");
+    const closed = localStorage.getItem("cartBarClosed") === "true";
+
+    if (bar && text) {
+        text.textContent = `🛒 ${total} מוצרים בסל`;
+        // רק אם יש פריטים וטרם סגרו את הבר
+        if (total > 0 && !closed) {
+            bar.style.display = "flex";
+        } else {
+            bar.style.display = "none";
+        }
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const closeBtn = document.getElementById("closeFloatingBar");
+    if (closeBtn) {
+        closeBtn.addEventListener("click", () => {
+            document.getElementById("floatingCartBar").style.display = "none";
+            localStorage.setItem("cartBarClosed", "true");
+        });
+    }
+
+    updateCartCount(); // מריץ בתחילת הדף
+});
+
+
+function renderCartItems() {
+    const cartContainer = document.getElementById("cartItems");
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    cartContainer.innerHTML = "";
+
+    if (cart.length === 0) {
+        cartContainer.innerHTML = `
+  <div style="text-align: center; padding: 40px;">
+    <p style="font-size: xx-large; font-weight: bolder; color: red; margin: 0;">הסל שלך ריק</p>
+  </div>
+`;
+        updateCartSummary();
+        return;
+    }
+
+    cart.forEach((item, index) => {
+        const itemDiv = document.createElement("div");
+        itemDiv.style = `
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 8px;
+            background: #fff;
+            text-align:right;
+        `;
+
+        itemDiv.innerHTML = `
+    <div style="display: flex; flex-direction: row-reverse; gap: 20px; align-items: flex-start; font-weight: bolder;
+    font-size: large;">
+
+       <img src="${item.image}" style="
+    max-width: 40%;
+    max-height: 40%;
+    height: auto;
+    width: auto;
+    object-fit: contain;
+    border-radius: 6px;
+    flex-shrink: 0;
+">
+        <!-- תוכן בצד ימין -->
+        <div style="flex: 1; text-align: right; direction: rtl;">
+
+            <div style="font-weight: bold;">${item.name}</div>
+            <div style="height: 1px; background-color: #e0e0e0; margin: 6px 0; max-width: 85px;
+"></div>
+
+            <div>${item.description}</div>
+            <div style="height: 1px; background-color: #e0e0e0; margin: 6px 0; max-width: 250px;
+"></div>
+
+            <div>מחיר: ₪${item.price.toFixed(2)}</div>
+            <div style="height: 1px; background-color: #e0e0e0; margin: 6px 0; max-width: 250px;"></div>
+
+            <label>כמות:</label>
+            <div style="display: flex; align-items: center; gap: 10px; margin: 10px 0;">
+                <button onclick="changeQuantity(${index}, -1)" class="qty-btn">➖</button>
+                <span id="qty-${index}" class="qty-display">${item.quantity}</span>
+                <button onclick="changeQuantity(${index}, 1)" class="qty-btn">➕</button>
+            </div>
+
+            <button onclick="removeItem(${index})" style=" font-weight: bolder; font-size: 18px; margin-top: 10px; color:rgb(0, 0, 0); border-radius: 20%;
+   border: none; background-color:rgb(118, 202, 236);">הסר</button>
+
+        </div>
+    </div>
+`;
+
+
+        cartContainer.appendChild(itemDiv);
+    });
+
+    updateCartSummary();
+}
+
+function changeQuantity(index, delta) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let newQty = cart[index].quantity + delta;
+
+    if (newQty < 1) return;
+
+    cart[index].quantity = newQty;
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    renderCartItems();      // מציג את כל המוצרים מחדש
+    updateCartSummary();    // מעדכן את הסרגל
+}
