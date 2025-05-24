@@ -139,10 +139,10 @@ function addToCart() {
     const quantity = parseInt(document.getElementById("productQuantity").value);
     const imageSrc = document.getElementById("previewImage").getAttribute("src");
 
-    // ✅ תמיד יוצר נתיב מלא ותקף לגיטהאב
+    // ✅ תיקון מלא לשמירה בגיטהאב (כולל תיקיית products)
     const fixedImage = imageSrc.startsWith("http")
         ? imageSrc
-        : location.origin + "/" + imageSrc.replace(/^\/+/, "");
+        : location.origin + "/products/" + imageSrc.replace(/^\/+/, "").replace(/^products\//, "");
 
     const product = {
         name,
@@ -162,8 +162,12 @@ function addToCart() {
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
+
+    // מציג את סרגל הסל ומעדכן
     localStorage.setItem("cartBarClosed", "false");
     updateCartCount();
+
+    // סוגר את תצוגת הבאנר
     document.getElementById("productPreviewBanner").style.display = "none";
 }
 
