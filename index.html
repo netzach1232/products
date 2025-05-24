@@ -19,6 +19,13 @@
             <h1 class="site-title" style="font-size: xx-large; color: #ffffff;">פיצ'יפקייס</h1>
         </div>
 
+        <div class="cart-icon-container">
+            <a href="cart.html" id="cartButton" aria-label="סל קניות">
+                <img src="images/shopping-cart.png" alt="סל קניות" />
+            </a>
+        </div>
+
+
         <div class="top-controls">
             <!-- תיבת חיפוש עם זכוכית מגדלת בפנים -->
             <div class="search-wrapper">
@@ -142,10 +149,19 @@
 
 
     <!-- כפתור חזרה למעלה עם תמונה -->
-    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" id="backToTop"
-        style="position:fixed; bottom:20px; left:20px; background:none; border:none; cursor:pointer; display:none; z-index:9999;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" id="backToTop" style="
+            position: fixed;
+            bottom: 80px; /* במקום 20px כדי לעלות מעל הסרגל */
+            left: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: none;
+            z-index: 10001; /* גבוה יותר מהסרגל */
+        ">
         <img src="images/up-arrow.png" alt="חזור למעלה" style="width: 50px; height: auto;">
     </button>
+
 
     <div id="whatsappBubbleWrapper">
         <span class="whatsapp-label">צור קשר</span>
@@ -181,14 +197,22 @@
                 style="width: 80px; padding: 5px; font-size: 16px;">
 
             <!-- כפתור לקנייה -->
-            <button onclick="proceedToOrder()"
-                style="margin-top:20px; width:100%; padding:10px; background:#007BFF; color:white; border:none; border-radius:6px; font-size:16px;">לקנייה</button>
+            <button onclick="addToCart()"
+                style="margin-top:20px; width:100%; padding:10px; background:#007BFF; color:white; border:none; border-radius:6px; font-size:16px;">אוסף
+                לסל🛒</button>
+
 
             <!-- עיגול טעינה -->
             <div id="loadingSpinner" style="display:none; text-align:center; margin-top: 15px;">
                 <img src="images/loading.png" alt="טוען..." style="width: 40px;" />
             </div>
         </div>
+    </div>
+
+    <div id="floatingCartBar" style="display: none;">
+        <span id="floatingCartText">🛒 0 מוצרים בסל</span>
+        <a href="cart.html" class="floatingCartButton">עבור לסל</a>
+        <span id="closeFloatingBar" style="cursor:pointer; margin-right: 10px; font-size: 20px;">❌</span>
     </div>
 
 
