@@ -138,10 +138,8 @@ function addToCart() {
     const quantity = parseInt(document.getElementById("productQuantity").value);
     const imageSrc = document.getElementById("previewImage").getAttribute("src");
 
-    // ✅ קישור ישיר לתיקיית /images בלבד
-    const fixedImage = imageSrc.startsWith("http")
-        ? imageSrc
-        : location.origin + "/images/" + imageSrc.split("/").pop();
+    // ✅ שומר את הנתיב בדיוק כמו שהוא, בלי location.origin, בלי תיקון
+    const fixedImage = imageSrc;
 
     const product = {
         name,
@@ -161,14 +159,12 @@ function addToCart() {
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
-
-    // מציג את סרגל הסל ומעדכן
     localStorage.setItem("cartBarClosed", "false");
     updateCartCount();
 
-    // סוגר את תצוגת הבאנר
     document.getElementById("productPreviewBanner").style.display = "none";
 }
+
 
 
 document.addEventListener("DOMContentLoaded", () => {
