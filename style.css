@@ -204,7 +204,7 @@ body {
 
 #whatsappBubbleWrapper {
     position: fixed;
-    bottom: 20px;
+    bottom: 80px;
     right: 20px;
     display: flex;
     flex-direction: column;
