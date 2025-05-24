@@ -138,9 +138,11 @@ function addToCart() {
     const price = document.getElementById("previewPrice").textContent.replace("₪", "").trim();
     const quantity = parseInt(document.getElementById("productQuantity").value);
     const image = document.getElementById("previewImage").getAttribute("src");
-    
-    // תיקון נתיב לתמונה – תמיד מתחיל ב-/
-    const fixedImage = image.startsWith("/") ? image : "/" + image;
+
+    // ✅ תיקון נתיב לתמונה לפרויקט ב-GitHub Pages
+    const fixedImage = image.includes("/products/images/")
+        ? image
+        : "/products/images/" + image.split("/").pop();
 
     const product = {
         name,
@@ -161,11 +163,11 @@ function addToCart() {
 
     localStorage.setItem("cart", JSON.stringify(cart));
 
-    // מציג את הסרגל ומאפס את הסגירה
+    // ✅ מציג את סרגל הסל
     localStorage.setItem("cartBarClosed", "false");
     updateCartCount();
 
-    // סגירת הבאנר של התצוגה
+    // ✅ סוגר את תצוגת הבאנר
     document.getElementById("productPreviewBanner").style.display = "none";
 }
 
