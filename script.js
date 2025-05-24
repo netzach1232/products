@@ -1,348 +1,225 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const searchInput = document.getElementById("searchInput");
-    const allProducts = Array.from(document.querySelectorAll("#allProducts .product"));
-    const noResultsMessage = document.getElementById("noResultsMessage");
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
 
-    // טוען חיפוש שמור
-    const savedSearch = localStorage.getItem("savedSearch");
-    if (savedSearch) {
-        searchInput.value = savedSearch;
-        triggerSearch();
-    }
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>מכירת מוצרים</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style2.css" />
+</head>
 
-    // שומר חיפוש בהקלדה
-    searchInput.addEventListener("input", () => {
-        localStorage.setItem("savedSearch", searchInput.value);
-    });
+<body>
 
-    // לחיצת אנטר
-    searchInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            triggerSearch();
-        }
-    });
-});
+    <header class="top-bar" style="background-color: rgba(7, 172, 117, 0.397);">
+        <div class="logo-container">
+            <a href="https://www.flaticon.com/free-icons/gadget" title="gadget icons" target="_blank">
+                <img src="images/gadget.png" alt="לוגו האתר" class="logo" />
+            </a>
+            <h1 class="site-title" style="font-size: xx-large; color: #ffffff;">פיצ'יפקייס</h1>
+        </div>
 
-
-function toggleAbout() {
-    const banner = document.getElementById("aboutBanner");
-
-    if (banner.style.display === "none" || banner.style.display === "") {
-        banner.style.display = "block";
-        // מונע גלילה ברקע כשהבאנר פתוח (אופציונלי)
-        document.body.style.overflow = "hidden";
-    } else {
-        banner.style.display = "none";
-        document.body.style.overflow = ""; // מחזיר גלילה
-    }
-}
+        <div class="cart-icon-container">
+            <a href="cart.html" id="cartButton" aria-label="סל קניות">
+                <img src="images/shopping-cart.png" alt="סל קניות" />
+            </a>
+        </div>
 
 
-function triggerSearch() {
-    const searchInput = document.getElementById("searchInput");
-    const query = searchInput.value.trim().toLowerCase();
-    const allProducts = Array.from(document.querySelectorAll("#allProducts .product"));
-    const noResultsMessage = document.getElementById("noResultsMessage");
-    const backToAllWrapper = document.getElementById("backToAllWrapper");
-
-    let found = false;
-
-    allProducts.forEach(product => {
-        const name = product.querySelector(".product-name").textContent.toLowerCase();
-        const description = product.getAttribute("data-description").toLowerCase();
-
-        if (name.includes(query) || description.includes(query)) {
-            product.style.display = "block";
-            if (!found) {
-                found = true;
-                product.scrollIntoView({ behavior: "smooth", block: "center" });
-
-                searchInput.value = "";
-                localStorage.removeItem("savedSearch");
-            }
-        } else {
-            product.style.display = "none";
-        }
-    });
-
-    // הצגת הודעת אין תוצאות
-    noResultsMessage.style.display = found ? "none" : "block";
-
-    // ✅ חשוב: מציג את כפתור החזרה אחרי חיפוש
-    backToAllWrapper.style.display = "block";
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    const backBtn = document.getElementById("backToAllBtn");
-    const allProducts = Array.from(document.querySelectorAll("#allProducts .product"));
-    const noResultsMessage = document.getElementById("noResultsMessage");
-    const backToAllWrapper = document.getElementById("backToAllWrapper");
-    const searchInput = document.getElementById("searchInput");
-
-    backBtn.addEventListener("click", () => {
-        allProducts.forEach(p => p.style.display = "block");
-        noResultsMessage.style.display = "none";
-        backToAllWrapper.style.display = "none";
-        searchInput.value = "";
-        localStorage.removeItem("savedSearch");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-});
-
-
-
-document.addEventListener("DOMContentLoaded", () => {
-    const products = document.querySelectorAll("#allProducts .product");
-
-    products.forEach(product => {
-        product.addEventListener("click", () => {
-            const name = product.querySelector(".product-name").textContent;
-            const description = product.getAttribute("data-description");
-            const price = product.getAttribute("data-price");
-            const imageSrc = product.querySelector("img").getAttribute("src");
-
-            // מציב את המידע בבאנר
-            document.getElementById("previewName").textContent = name;
-            document.getElementById("previewDescription").textContent = description;
-            document.getElementById("previewPrice").textContent = "₪" + price;
-            document.getElementById("previewImage").setAttribute("src", imageSrc);
-            document.getElementById("previewImage").setAttribute("alt", name);
-
-            // מציג את הבאנר
-            document.getElementById("productPreviewBanner").style.display = "flex";
-        });
-    });
-});
-
-
-document.addEventListener("DOMContentLoaded", () => {
-    const backToTopBtn = document.getElementById("backToTop");
-
-    // מאזין לגלילה
-    window.addEventListener("scroll", () => {
-        if (window.scrollY > 200) {
-            backToTopBtn.style.display = "block";
-        } else {
-            backToTopBtn.style.display = "none";
-        }
-    });
-
-    // לחיצה על הכפתור כבר קיימת ב-HTML שלך: onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
-});
-
-
-function addToCart() {
-    const name = document.getElementById("previewName").textContent;
-    const description = document.getElementById("previewDescription").textContent;
-    const price = document.getElementById("previewPrice").textContent.replace("₪", "").trim();
-    const quantity = parseInt(document.getElementById("productQuantity").value);
-    const imageSrc = document.getElementById("previewImage").getAttribute("src");
-
-    // ✅ יצירת כתובת מלאה שמתחילה עם https://... כולל הנתיב
-    const fullImageUrl = imageSrc.startsWith("http")
-        ? imageSrc
-        : location.origin + "/" + imageSrc.replace(/^\/+/, ""); // מסיר / כפול
-
-    const product = {
-        name,
-        description,
-        price: parseFloat(price),
-        quantity,
-        image: fullImageUrl
-    };
-
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    const existing = cart.find(item => item.name === product.name);
-    if (existing) {
-        existing.quantity += quantity;
-    } else {
-        cart.push(product);
-    }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    // סרגל קניות ופרטים
-    localStorage.setItem("cartBarClosed", "false");
-    updateCartCount();
-    document.getElementById("productPreviewBanner").style.display = "none";
-}
-
-
-
-
-document.addEventListener("DOMContentLoaded", () => {
-    renderCartItems(); // זה ירנדר את הכל נכון, כולל הכפתורים
-});
-
-
-function updateQuantity(index, newQuantity) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart[index].quantity = parseInt(newQuantity);
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    // עדכון מיידי של תצוגת הסל והסרגל
-    renderCartItems(); // מציג מחדש את כל המוצרים עם הכמות החדשה
-    updateCartSummary(); // מעדכן את הסרגל למטה
-}
-
-
-function removeItem(index) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.splice(index, 1);
-    localStorage.setItem("cart", JSON.stringify(cart));
-    renderCartItems();     // מציג את המוצרים מחדש
-    updateCartSummary();   // מעדכן את הסרגל
-}
-
-
-function updateCartCount() {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const total = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-    // מספר בעיגול בסל למעלה
-    const badge = document.getElementById("cartCount");
-    if (badge) {
-        badge.textContent = total;
-        badge.style.display = total > 0 ? "inline-block" : "none";
-    }
-
-    // סרגל למטה
-    const bar = document.getElementById("floatingCartBar");
-    const text = document.getElementById("floatingCartText");
-    const closed = localStorage.getItem("cartBarClosed") === "true";
-
-    if (bar && text) {
-        text.textContent = `🛒 ${total} מוצרים בסל`;
-        // רק אם יש פריטים וטרם סגרו את הבר
-        if (total > 0 && !closed) {
-            bar.style.display = "flex";
-        } else {
-            bar.style.display = "none";
-        }
-    }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    const closeBtn = document.getElementById("closeFloatingBar");
-    if (closeBtn) {
-        closeBtn.addEventListener("click", () => {
-            document.getElementById("floatingCartBar").style.display = "none";
-            localStorage.setItem("cartBarClosed", "true");
-        });
-    }
-
-    updateCartCount(); // מריץ בתחילת הדף
-});
-
-
-function renderCartItems() {
-    const cartContainer = document.getElementById("cartItems");
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    cartContainer.innerHTML = "";
-
-    if (cart.length === 0) {
-        cartContainer.innerHTML = `
-  <div style="text-align: center; padding: 40px;">
-    <p style="font-size: xx-large; font-weight: bolder; color: red; margin: 0;">הסל שלך ריק</p>
-  </div>
-`;
-        updateCartSummary();
-        return;
-    }
-
-    cart.forEach((item, index) => {
-        const itemDiv = document.createElement("div");
-        itemDiv.style = `
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            padding: 15px;
-            border-radius: 8px;
-            background: #fff;
-            text-align:right;
-        `;
-
-        itemDiv.innerHTML = `
-    <div style="display: flex; flex-direction: row-reverse; gap: 20px; align-items: flex-start; font-weight: bolder;
-    font-size: large;">
-
-       <img src="${item.image}" style="
-    max-width: 40%;
-    max-height: 40%;
-    height: auto;
-    width: auto;
-    object-fit: contain;
-    border-radius: 6px;
-    flex-shrink: 0;
-">
-        <!-- תוכן בצד ימין -->
-        <div style="flex: 1; text-align: right; direction: rtl;">
-
-            <div style="font-weight: bold;">${item.name}</div>
-            <div style="height: 1px; background-color: #e0e0e0; margin: 6px 0; max-width: 85px;
-"></div>
-
-            <div>${item.description}</div>
-            <div style="height: 1px; background-color: #e0e0e0; margin: 6px 0; max-width: 250px;
-"></div>
-
-            <div>מחיר: ₪${item.price.toFixed(2)}</div>
-            <div style="height: 1px; background-color: #e0e0e0; margin: 6px 0; max-width: 250px;"></div>
-
-            <label>כמות:</label>
-            <div style="display: flex; align-items: center; gap: 10px; margin: 10px 0;">
-                <button onclick="changeQuantity(${index}, -1)" class="qty-btn">➖</button>
-                <span id="qty-${index}" class="qty-display">${item.quantity}</span>
-                <button onclick="changeQuantity(${index}, 1)" class="qty-btn">➕</button>
+        <div class="top-controls">
+            <!-- תיבת חיפוש עם זכוכית מגדלת בפנים -->
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" placeholder="חפש מוצר..." class="search-input-with-icon">
+                <button onclick="triggerSearch()" class="search-icon-button" aria-label="חפש">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="#007BFF">
+                        <path
+                            d="M15.5 14h-.79l-.28-.27a6.471 6.471 0 001.48-5.34C15.21 5.01 12.2 2 8.75 2S2.29 5.01 2.29 8.39s3.01 6.39 6.46 6.39c1.61 0 3.09-.59 4.24-1.57l.27.28v.79l5.01 5.02 1.5-1.5-5.02-5.01zM8.75 14c-3.08 0-5.59-2.51-5.59-5.61S5.67 2.79 8.75 2.79s5.61 2.51 5.61 5.59S11.83 14 8.75 14z" />
+                    </svg>
+                </button>
             </div>
 
-            <button onclick="removeItem(${index})" style=" font-weight: bolder; font-size: 18px; margin-top: 10px; color:rgb(0, 0, 0); border-radius: 20%;
-   border: none; background-color:rgb(118, 202, 236);">הסר</button>
+            <!-- שורת כפתורים מחוברים -->
+            <div class="double-button-row">
+                <a href="https://wa.me/972555036481" target="_blank" class="main-button">📲 שלח לחבר</a>
+                <button onclick="toggleAbout()" class="main-button">אודות האתר</button>
+            </div>
+        </div>
 
+
+
+
+
+        <!-- באנר כ-overlay שלא מזיז את התוכן -->
+        <div id="aboutBanner"
+            style="display:none; position:fixed; top:0; right:0; left:0; background:rgba(255,255,255,0.97); z-index:9999; padding: 30px 20px; text-align:right; font-size: x-large; line-height:1.8; box-shadow: 0 2px 10px rgba(0,0,0,0.3); border-bottom: 2px solid #007BFF; font-weight: bold;">
+            <span onclick="toggleAbout()"
+                style="position:absolute; left:20px; top:10px; font-size:26px; cursor:pointer;">❌</span>
+            <strong>שלום רב,</strong><br>
+            אתרנו מציע מתנות אישיות לחברים ולקרובים, ובנוסף גאדג'טים ומוצרים מועילים נוספים.<br><br>
+            מדיניות משלוחים,
+            זמני האספקה משתנים ממוצר למוצר, ורשומים בתאור המוצר.
+        </div>
+
+
+    </header>
+
+    <p id="noResultsMessage" style="text-align: center; font-size: 18px; color: #888; display: none;">
+        לא נמצאו תוצאות
+    </p>
+
+
+    <div style="text-align: center; line-height: 1.8; margin: 30px 0;">
+        <hr style="width: 60%; margin: 20px auto; height: 1px; background-color: #ccc; border: none;" />
+    </div>
+
+    <div id="backToAllWrapper" style="width: 100%; display: none; text-align: right; padding: 10px 30px;">
+        <button id="backToAllBtn" style="background: none; border: none; cursor: pointer;">
+            <img src="images/back-main.png" alt="חזור" style="width: 40px; height: auto;">
+        </button>
+    </div>
+
+    <div id="allProducts" class="product-grid">
+        <div class="product" data-price="100000.90" data-description="כוס תרמית שומרת \ם למשקאות">
+            <img src="images/oo1.jpg" alt="כוס תרמית" />
+            <div class="product-name">כוס תרמית</div>
+        </div>
+        <div class="product" data-price="59.90" data-description="מטען מהיר לרכב עם שתי יציאות USB">
+            <img src="images/car-charger.jpg" alt="מטען לרכב" />
+            <div class="product-name">מטען לרכב</div>
+        </div>
+        <div class="product" data-price="89.00" data-description="אוזניות אלחוטיות עם סינון רעשים">
+            <img src="images/earbuds.jpg" alt="אוזניות" />
+            <div class="product-name">אוזניות אלחוטיות</div>
+        </div>
+        <div class="product" data-price="39.90" data-description="סט עט ובלוק כתיבה בעיצוב יוקרתי">
+            <img src="images/pen-set.jpg" alt="סט עט" />
+            <div class="product-name">סט עט יוקרתי</div>
+        </div>
+        <div class="product" data-price="149.00" data-description="שעון יד חכם עם מסך מגע ותמיכה בבלוטות'">
+            <img src="images/smartwatch.jpg" alt="שעון חכם" />
+            <div class="product-name">שעון חכם</div>
         </div>
     </div>
-`;
 
 
-        cartContainer.appendChild(itemDiv);
-    });
+    <div id="orderFormModal"
+        style="display:none; position:fixed; top:0; right:0; left:0; bottom:0; background:rgba(0,0,0,0.7); z-index:1000; justify-content:center; align-items:center;">
+        <div
+            style="background:white; padding:30px; border-radius:10px; width:90%; max-width:500px; text-align:right; position:relative;">
+            <span onclick="document.getElementById('orderFormModal').style.display='none'"
+                style="position:absolute; top:10px; left:20px; cursor:pointer; font-size:20px;">✖</span>
+            <h3>פרטי הזמנה</h3>
 
-    updateCartSummary();
-}
+            <form action="https://formspree.io/f/mwpojlyn" method="POST">
 
-function changeQuantity(index, delta) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    let newQty = cart[index].quantity + delta;
+                <input type="hidden" name="product" id="selectedProductInput">
+                <input type="hidden" name="quantity" id="selectedQuantityInput">
 
-    if (newQty < 1) return;
+                <!-- השם של המוצר יוזן אוטומטית כאן -->
+                <input type="hidden" name="product" id="selectedProductInput">
 
-    cart[index].quantity = newQty;
-    localStorage.setItem("cart", JSON.stringify(cart));
+                <label>שם מלא*</label>
+                <input type="text" name="name" required style="width:100%; margin-bottom:10px;"><br>
 
-    renderCartItems();      // מציג את כל המוצרים מחדש
-    updateCartSummary();    // מעדכן את הסרגל
-}
+                <label>כתובת מלאה*</label>
+                <input type="text" name="address" required style="width:100%; margin-bottom:10px;"><br>
 
-let initialWindowHeight;
+                <label>מיקוד*</label>
+                <input type="text" name="zip" required style="width:100%; margin-bottom:10px;"><br>
 
-document.addEventListener("DOMContentLoaded", () => {
-    initialWindowHeight = window.innerHeight;
-});
+                <label>מספר טלפון*</label>
+                <input type="tel" name="phone" required style="width:100%; margin-bottom:10px;"><br>
 
-window.addEventListener('resize', () => {
-    const currentHeight = window.innerHeight;
-    const isKeyboardOpen = currentHeight < initialWindowHeight - 100;
+                <label>מייל*</label>
+                <input type="email" name="email" required style="width:100%; margin-bottom:10px;"><br>
 
-    const whatsappBubble = document.getElementById('whatsappBubbleWrapper');
-    const backToTop = document.getElementById('backToTop');
+                <label>הערות להזמנה:</label>
+                <textarea name="message" style="width:100%; margin-bottom:10px;"></textarea><br>
 
-    if (isKeyboardOpen) {
-        if (whatsappBubble) whatsappBubble.style.display = 'none';
-        if (backToTop) backToTop.style.display = 'none';
-    } else {
-        if (whatsappBubble) whatsappBubble.style.display = 'flex'; // או block לפי העיצוב שלך
-        if (backToTop && window.scrollY > 200) backToTop.style.display = 'block'; // רק אם עברו 200px גלילה
-    }
-});
+                <button type="submit"
+                    style="width:100%; padding:10px; background:#4caf50; color:white; border:none; border-radius:5px;">הבא
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <meta name="description" content="גמ״ח מוצרים בחינם. שלח בקשה וקבל פריט ללא עלות.">
+    <meta name="keywords" content="גמ״ח, מוצרים חינם, מתנות, מוצרי גמילות חסדים, תרומות">
+    <meta name="robots" content="index, follow">
+
+
+    <!-- כפתור חזרה למעלה עם תמונה -->
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" id="backToTop" style="
+            position: fixed;
+            bottom: 80px; /* במקום 20px כדי לעלות מעל הסרגל */
+            left: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: none;
+            z-index: 10001; /* גבוה יותר מהסרגל */
+        ">
+        <img src="images/up-arrow.png" alt="חזור למעלה" style="width: 50px; height: auto;">
+    </button>
+
+
+    <div id="whatsappBubbleWrapper">
+        <span class="whatsapp-label">צור קשר</span>
+        <a href="https://wa.me/972555036481" target="_blank" class="whatsapp-bubble">
+            <img src="images/whatsapp.png" alt="וואטסאפ" />
+        </a>
+    </div>
+
+    <!-- באנר פרטי מוצר לפני טופס -->
+    <div id="productPreviewBanner"
+        style="display:none; position:fixed; top:0; right:0; bottom:0; left:0; background:rgba(0,0,0,0.75); z-index:10000; justify-content:center; align-items:center;">
+        <div
+            style="background:white; padding:30px; border-radius:12px; max-width:400px; width:90%; position:relative; text-align:right;">
+            <!-- כפתור סגירה -->
+            <span onclick="document.getElementById('productPreviewBanner').style.display='none'"
+                style="position:absolute; top:10px; left:15px; cursor:pointer; font-size:20px;">✖</span>
+
+            <!-- תמונה -->
+            <img id="previewImage" src="" alt="מוצר" style="width:100%; border-radius:8px; margin-bottom:15px;" />
+
+            <!-- שם -->
+            <h3 id="previewName"></h3>
+
+            <!-- מחיר -->
+            <p id="previewPrice" style="font-size:16px; font-weight:bold; color:#4CAF50;">₪29.90</p>
+
+            <!-- תיאור -->
+            <p id="previewDescription" style="font-size:14px; color:#666;">תיאור קצר של המוצר יוצג כאן.</p>
+
+            <label for="productQuantity" style="display:block; margin-top:10px;">בחר כמות:</label>
+
+            <input type="number" id="productQuantity" min="1" value="1"
+                style="width: 80px; padding: 5px; font-size: 16px;">
+
+            <!-- כפתור לקנייה -->
+            <button onclick="addToCart()"
+                style="margin-top:20px; width:100%; padding:10px; background:#007BFF; color:white; border:none; border-radius:6px; font-size:16px;">אוסף
+                לסל🛒</button>
+
+
+            <!-- עיגול טעינה -->
+            <div id="loadingSpinner" style="display:none; text-align:center; margin-top: 15px;">
+                <img src="images/loading.png" alt="טוען..." style="width: 40px;" />
+            </div>
+        </div>
+    </div>
+
+    <div id="floatingCartBar" style="display: none;">
+        <span id="floatingCartText">🛒 0 מוצרים בסל</span>
+        <a href="cart.html" class="floatingCartButton">עבור לסל</a>
+        <span id="closeFloatingBar" style="cursor:pointer; margin-right: 10px; font-size: 20px;">❌</span>
+    </div>
+
+
+
+    <script src="script.js"></script>
+</body>
+
+
+
+</html>
